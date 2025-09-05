@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>The Challenge of Interacting with React: Building a Chrome Extension for Steam</title>
+    <link rel="stylesheet" href="/assets/css/style.css" />
+    <link rel="stylesheet" href="/assets/css/mediaqueries.css" />
+</head>
+
+<body>
+    <nav id="desktop-nav">
+        <div class="logo">Agustina González Ginares</div>
+        <div>
+            <ul class="nav-links">
+                <li><a href="index.html#about">About</a></li>
+                <li><a href="index.html#experience">Experience</a></li>
+                <li><a href="index.html#projects">Projects</a></li>
+                <li><a href="blog.html">Blog</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+        </div>
+    </nav>
+    <nav id="hamburger-nav">
+        <div class="logo">Agustina González Ginares</div>
+        <div class="hamburger-menu">
+            <div class="hamburger-icon" onclick="toggleMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="menu-links">
+                <li><a href="index.html#about" onclick="toggleMenu()">About</a></li>
+                <li>
+                    <a href="index.html#experience" onclick="toggleMenu()">Experience</a>
+                </li>
+                <li>
+                    <a href="index.html#projects" onclick="toggleMenu()">Projects</a>
+                </li>
+                <li><a href="blog.html" onclick="toggleMenu()">Blog</a></li>
+                <li>
+                    <a href="index.html#contact" onclick="toggleMenu()">Contact</a>
+                </li>
+            </div>
+        </div>
+    </nav>
+
+    <section id="blog-post">
+        <h1 class="title">The Challenge of Interacting with React: Building a Chrome Extension for Steam</h1>
+        <div class="post-container">
+            <p>
+                We've all been there: you have a Steam wishlist with hundreds of
+                games, and when the sales come around, analysis paralysis strikes.
+            </p><br>
+            <p>
+                Which one to buy? Which one to play? To solve this first-world
+                problem, I decided to create my own Chrome extension: a button that
+                picks a random game from my list.
+            </p><br>
+            <p>
+                This project, though small, has been a great help in learning more
+                about JavaScript. In this article, I'll guide you step-by-step through
+                the entire process, from the initial idea to solving the challenges
+                that arose when interacting with a website as dynamic as Steam.
+            </p><br>
+
+            <h2>What do you need to get started?</h2><br>
+            <p>
+                <b>Languages:</b> You only need basic knowledge of HTML, CSS, and
+                JavaScript. You don't need to be an expert, but you do need to
+                understand how they work together.<br /><br>
+                <b>The Browser's Developer Console:</b> Our best friend for inspecting
+                Steam's code.
+            </p><br>
+
+            <h3>Step 1: The foundation of any extension—the manifest.json file</h3><br>
+            <p>
+                Every Chrome extension needs a manifest.json file. It's like our
+                project's ID card: it tells the browser what it is, what permissions
+                it needs, and which files to run.
+            </p>
+            <p>Ours is very simple:</p>
+            <pre><code class="language-json">
+{
+    "name": "Spin the Wishlist",
+    "version": "1.0",
+    "description": "Adds a button to the Steam wishlist for picking a random game",
+    "manifest_version": 3,
+    "action": {
+        "default_icon": {
+            "16": "icons/spinthewishlist_icon16.png",
+            "32": "icons/spinthewishlist_icon32.png"
+        }
+    },
+    "icons": {
+        "16": "icons/spinthewishlist_icon16.png",
+        "32": "icons/spinthewishlist_icon32.png",
+        "48": "icons/spinthewishlist_icon48.png",
+        "128": "icons/spinthewishlist_icon128.png"
+    },
+    "content_scripts": [
+        {
+            "matches": ["https://store.steampowered.com/wishlist/*"],
+            "js": ["content.js"],
+            "css": ["styles.css"]
+        }
+    ]
+}
+            </code></pre>
+            <p>
+                The most important part here is the
+                <code>content_scripts</code> section. We're telling Chrome: "When the
+                user is on a URL that matches
+                https://store.steampowered.com/wishlist/*, inject and run the
+                content.js and styles.css files."
+            </p><br>
+
+            <h3>Step 2: Bringing life to the content.js button</h3>
+            <p>
+                This is where all the magic happens. Our script has three main
+                responsibilities:
+            </p><br>
+            <ul>
+                <li>Read and extract the games from the page.</li>
+                <li>Pick one at random and open it.</li>
+                <li>Create and inject our button into the page.</li>
+            </ul><br>
+            <p>Let's break down the code.</p><br>
+
+            <h4>Extracting game data</h4><br>
+            <p>
+                First, we needed a way to read the list. Using the element inspector,
+                I found that each game is contained in a div with a specific class
+                (currently, <code>.LSY1zV2DJSM-</code>), and the game's name and ID
+                are in a link <code>&lt;a&gt;</code> inside that div.
+            </p>
+            <p>That's how the <code>getGamesFromList</code> function was born:</p>
+            <pre><code class="language-javascript">
+            function getGamesFromList() {
+                const gameRows = document.querySelectorAll(".LSY1zV2DJSM-");
+
+                if (gameRows.length === 0) {
+                    console.error("Spin the Wishlist: Couldn't find any elements with class '.LSY1zV2DJSM-'.")
+                    return null;
+                }
+
+                const gameList = [];
+
+                for (const row of gameRows) {
+                    const titleLink = row.querySelector("a.Fuz2JeT4RfI [href*='/app/']")
+
+                    if (titleLink) {
+                        const gameName = titleLink.textContent;
+                        const href = titleLink.href;
+                        const match = href.match(/app\/(\d+)/);
+                        if (match && match[1]) {
+                            const appId = match[1];
+                            gameList.push({
+                                name: gameName,
+                                id: appId
+                            });
+                        }
+                    }
+                }
+
+                return gameList;
+            }
+            </code></pre>
+            <p>
+                This function finds all the game elements, iterates over them, and
+                extracts the name and ID of each one, returning a clean array of
+                objects.
+            </p><br>
+
+            <h4>The main logic: Choosing and opening</h4><br>
+            <p>
+                Once we have the list, the next part is easy: pick a random index from
+                the array and build the URL for the Steam store.
+            </p>
+            <pre><code class="language-javascript">
+            function openRandomGame() {
+                const games = getGamesFromList();
+
+                if (games === null) {
+                    alert(TEXT.error);
+                    return;
+                }
+
+                if (games.length > 0) {
+                    const randomGame = games[Math.floor(Math.random() * games.length)];
+
+                    const linkRandomGame = `https://store.steampowered.com/app/${randomGame.id}/`;
+                    console.log(TEXT.gameChosen(randomGame.name));
+                    window.open(linkRandomGame, '_blank');
+                } else {
+                    alert(TEXT.noGames);
+                }
+            }
+            </code></pre>
+
+            <h3>Step 3: The great challenge—battling a dynamic web</h3><br>
+            <p>
+                With the logic ready, all that was left was to add the button. It
+                seemed easy: find the controls div and add our button with
+                <code>appendChild</code>.
+            </p>
+            <pre><code class="language-javascript">
+            // The first attempt... which didn't work as expected.
+            window.addEventListener('load', function () {
+                const buttonContainer = document.querySelector(".ADJFyRYJvZU-");
+                if (buttonContainer) {
+                    // ...code to create and add the button...
+                }
+            });
+            </code></pre>
+            <p>
+                Here I hit the first major roadblock: the button would appear for a
+                second and then disappear. After some research, I realized that the
+                Steam page uses React. My script was adding the button to the DOM, but
+                right after, React would redraw that part of the page, deleting my
+                button in the process.
+            </p><br>
+            <p>
+                The solution was to switch from a "set it and forget it" approach to a
+                "watch and maintain" one. Instead of adding the button once, I created
+                a function that runs every second to make sure our button is always
+                there.
+            </p>
+            <pre><code class="language-javascript">
+            function ensureButtonExists() {
+                const buttonContainer = this.document.querySelector(".ADJFyRYJvZU-");
+
+                if (buttonContainer) {
+                    const buttonExists = document.querySelector('.spin-the-wishlist-button');
+
+                    if (!buttonExists) {
+                        const randomButton = this.document.createElement("button");
+                        randomButton.innerText = TEXT.pickButton;
+                        randomButton.className = 'spin-the-wishlist-button';
+
+                        randomButton.addEventListener("click", openRandomGame);
+                        buttonContainer.appendChild(randomButton);
+                    }
+                }
+            }
+
+            setInterval(ensureButtonExists, 1000);
+            </code></pre>
+            <p>
+                With <code>setInterval</code>, our script becomes a watchdog. If React
+                deletes the button, the next second our script detects it and puts it
+                back. Problem solved!
+            </p>
+            <br />
+            <p>
+                This project has been a fascinating journey that has taught me a
+                valuable lesson: defensive programming is key when interacting with
+                third-party websites. Anticipating that the page structure may change
+                or that frameworks may interfere is essential for building robust
+                tools.
+            </p>
+            <br />
+
+            <h4>Now you have a fully functional extension. What's next?</h4>
+            <br />
+            <ul>
+                <li>Add languages to a translations object.</li>
+                <li>Save a history of the games that have been selected.</li>
+                <li>Add configuration options in a popup.</li>
+            </ul>
+            <br />
+            <p>The full code for this project is available on my GitHub:</p>
+            <br />
+            <p>
+                <a href="https://github.com/agustinagogi/Spin-the-wishlist"
+                    target="_blank">https://github.com/agustinagogi/Spin-the-wishlist</a>
+            </p>
+            <br />
+            <p>
+                Thanks for reading! If you have any questions or suggestions, feel
+                free to leave a comment. :)
+            </p>
+        </div>
+    </section>
+
+    <footer>
+        <nav>
+            <div class="nav-links-container">
+                <ul class="nav-links">
+                    <li><a href="index.html#about">About</a></li>
+                    <li><a href="index.html#experience">Experience</a></li>
+                    <li><a href="index.html#projects">Projects</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="index.html#contact">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+        <p>
+            Copyright &#169; 2025 Agustina González Ginares. All Rights Reserved.
+        </p>
+    </footer>
+    <script src="./assets/js/script.js"></script>
+</body>
+
+</html>
