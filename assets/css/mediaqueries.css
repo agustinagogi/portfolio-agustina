@@ -1,9 +1,121 @@
-@media screen and (width <= 1200px) {
-    #desktop-nav {
-        display: none;
-    }
+/* ==========================================================================
+   Media Queries para Tablets y Dispositivos Medianos (hasta 1200px)
+   ========================================================================== */
+@media screen and (max-width: 1200px) {
+  #desktop-nav {
+    display: none;
+  }
 
-    #hamburger-nav {
-        display: flex;
-    }
+  #hamburger-nav {
+    display: flex;
+  }
+
+  section,
+  .section-container {
+    display: block;
+  }
+
+  section {
+    margin: 0 5%;
+  }
+
+  #profile {
+    display: block;
+    height: auto;
+    text-align: center;
+  }
+
+  .section-pic-container {
+    width: 275px;
+    height: 275px;
+    margin: 0 auto 2rem;
+  }
+
+  .about-containers {
+    margin-top: 0;
+  }
+}
+
+/* ==========================================================================
+   Media Queries para Móviles (hasta 768px)
+   ========================================================================== */
+@media screen and (max-width: 768px) {
+  body {
+    text-align: center;
+  }
+
+  .section-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  #profile, #about, #experience, #projects, #contact {
+    height: auto;
+    margin-bottom: 2rem;
+  }
+
+  .logo {
+    font-size: 1.5rem;
+  }
+  
+  .nav-links {
+    flex-direction: column;
+    gap: 0.5rem;
+    text-align: center;
+  }
+  
+  .title {
+    font-size: 2rem;
+  }
+
+  .section-text-p2 {
+    font-size: 1.25rem;
+  }
+
+  #socials-container {
+    justify-content: center;
+  }
+
+  .btn-container {
+    flex-wrap: wrap;
+  }
+
+  .about-containers {
+    flex-direction: column;
+  }
+  
+  #about .section-pic-container {
+      width: 70%;
+      margin: 0 auto 2rem;
+  }
+
+  #experience .about-containers {
+    flex-direction: column;
+    gap: 2rem;
+  }
+  
+  .experience-details-container {
+      margin-top: 1rem;
+  }
+
+  .article-container {
+    justify-content: center;
+  }
+
+  #projects .about-containers {
+      flex-direction: column;
+  }
+  
+  #projects .color-container {
+    width: 90%;
+    margin: 0 auto;
+  }
+  
+  .contact-info-upper-container {
+    flex-direction: column;
+  }
+  
+  .contact-info-container {
+    margin: 0.5rem auto;
+  }
 }
