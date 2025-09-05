@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "about": "Sobre mí",
+    "experience": "Experiencia",
+    "projects": "Proyectos",
+    "contact": "Contacto"
+  },
+  "profile": {
+    "greeting": "Hola, soy",
+    "role": "Desarrolladora de Software",
+    "download_cv": "Descargar CV",
+    "contact_info": "Contáctame"
+  },
+  "about": {
+      "title": "Sobre Mí",
+      "get_to_know": "Conoce Más",
+      "experience_years": "1 año",
+      "experience_title": "Experiencia",
+      "experience_subtitle": "Desarrollo de Software",
+      "education_title": "Educación",
+      "education_subtitle": "Técnico Superior en Desarrollo de Aplicaciones Multiplataforma",
+      "p1": "Como Desarrolladora de Software, mi pasión es la programación y ver cómo el código se transforma en aplicaciones funcionales y robustas. Soy Técnico Superior en Desarrollo de Aplicaciones Multiplataforma, me especializo en el ecosistema de Java y Kotlin para crear soluciones tanto para el backend como para aplicaciones de escritorio y móviles.",
+      "p2": "Mi experiencia se centra en el desarrollo backend, donde utilizo herramientas como Spring Boot y Hibernate para construir APIs RESTful y gestionar bases de datos SQL de manera eficiente. También poseo conocimientos en desarrollo frontend con HTML, CSS, JavaScript y React para crear interfaces de usuario funcionales.",
+      "p3": "Creo en la importancia de escribir código de calidad, por lo que aplico buenas prácticas de testing y metodologías ágiles para garantizar la estabilidad del software. Busco un puesto donde pueda aportar mis habilidades, enfrentarme a nuevos retos y seguir creciendo como profesional cada día."
+  },
+  "experience_section": {
+    "explore": "Explora mi",
+    "title": "Experiencia",
+    "backend": "Desarrollo Backend",
+    "frontend": "Desarrollo Frontend"
+  },
+  "projects_section": {
+      "browse": "Explora mis",
+      "title": "Proyectos",
+      "live_demo": "Ver Demo"
+  },
+  "contact_section": {
+      "get_in_touch": "Ponte en",
+      "title": "Contacto"
+  }
+}

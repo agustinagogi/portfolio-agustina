@@ -1,0 +1,41 @@
+{
+  "nav": {
+    "about": "About",
+    "experience": "Experience",
+    "projects": "Projects",
+    "contact": "Contact"
+  },
+  "profile": {
+    "greeting": "Hello, I'm",
+    "role": "Software Developer",
+    "download_cv": "Download CV",
+    "contact_info": "Contact Info"
+  },
+  "about": {
+      "title": "About Me",
+      "get_to_know": "Get To Know More",
+      "experience_years": "1 year",
+      "experience_title": "Experience",
+      "experience_subtitle": "Software Development",
+      "education_title": "Education",
+      "education_subtitle": "Higher Technician in Multiplatform Application Development",
+      "p1": "As a Software Developer, my passion is programming and seeing how code transforms into functional and robust applications. I am a Higher Technician in Multiplatform Application Development, specializing in the Java and Kotlin ecosystem to create solutions for both backend and desktop and mobile applications.",
+      "p2": "My experience is focused on backend development, where I use tools like Spring Boot and Hibernate to build RESTful APIs and efficiently manage SQL databases. I also have knowledge in frontend development with HTML, CSS, JavaScript, and React to create functional user interfaces.",
+      "p3": "I believe in the importance of writing quality code, which is why I apply good testing practices and agile methodologies to ensure software stability. I am looking for a position where I can contribute my skills, face new challenges, and continue to grow as a professional every day."
+  },
+  "experience_section": {
+      "explore": "Explore My",
+      "title": "Experience",
+      "backend": "Backend Development",
+      "frontend": "Frontend Development"
+  },
+  "projects_section": {
+      "browse": "Browse My Recent",
+      "title": "Projects",
+      "live_demo": "Live Demo"
+  },
+  "contact_section": {
+      "get_in_touch": "Get in Touch",
+      "title": "Contact Me"
+  }
+}
